@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Список чтения</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    color: #eee;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+  }
+  section {
+    margin-bottom: 2.5rem;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+  }
+  section h2 {
+    margin-top: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  li.book-item {
+    border-bottom: 1px solid #222;
+    padding: 0.8rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  li.book-item:last-child {
+    border-bottom: none;
+  }
+  .book-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #eee;
+  }
+  .book-author {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #999;
+  }
+  .book-status, .book-availability {
+    align-self: flex-start;
+    padding: 0.3em 0.8em;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    user-select: none;
+    min-width: 100px;
+    text-align: center;
+  }
+  .book-status.read {
+    background: #4caf50;
+    color: #000;
+  }
+  .book-status.reading {
+    background: #f5a623;
+    color: #000;
+  }
+  .book-status.will_read {
+    background: #555;
+    color: #eee;
+  }
+  .book-status.maybe_read {
+    background: #333;
+    color: #aaa;
+  }
+  .book-availability.available {
+    background: #2196f3;
+    color: #fff;
+    margin-top: 0;
+  }
+  .book-availability.not-available {
+    background: #666;
+    color: #ccc;
+    margin-top: 0;
+  }
+  .includes-list {
+    margin-left: 1rem;
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #777;
+  }
+</style>
+</head>
+<body>
+  <h1>Мой список чтения</h1>
+
+  <main id="content"></main>
+
+<script>
+  const data = [
+    {
+      "series": "Ведьмак (сага)",
+      "books": [
+        {"title": "Последнее желание", "author": "Анджей Сапковский", "status": "read", "hasBook": true},
+        {"title": "Меч предназначения", "author": "Анджей Сапковский", "status": "reading", "hasBook": true},
+        {"title": "Кровь эльфов", "author": "Анджей Сапковский", "status": "will_read", "hasBook": false},
+        {"title": "Час презрения", "author": "Анджей Сапковский", "status": "will_read", "hasBook": false},
+        {"title": "Крещение огнем", "author": "Анджей Сапковский", "status": "will_read", "hasBook": false},
+        {"title": "Башня ласточки", "author": "Анджей Сапковский", "status": "will_read", "hasBook": false},
+        {"title": "Владычица озера", "author": "Анджей Сапковский", "status": "will_read", "hasBook": false}
+      ]
+    },
+    {
+      "series": "Трилогия о капитане Немо",
+      "books": [
+        {"title": "Дети капитана Гранта", "author": "Жюль Верн", "status": "will_read", "hasBook": true},
+        {"title": "Двадцать тысяч лье под водой", "author": "Жюль Верн", "status": "will_read", "hasBook": false},
+        {"title": "Таинственный остров", "author": "Жюль Верн", "status": "read", "hasBook": true}
+      ]
+    },
+    {
+      "series": "Сага о Ленсменах",
+      "books": [
+        {
+          "title": "Первая книга",
+          "author": "Док Смит",
+          "status": "will_read",
+          "hasBook": true,
+          "includes": [
+            "Союз трёх планет",
+            "Первый линзмен",
+            "Галактический патруль"
+          ]
+        },
+        {
+          "title": "Вторая книга",
+          "author": "Док Смит",
+          "status": "will_read",
+          "hasBook": true,
+          "includes": [
+            "Серый линзмен",
+            "Линзмены второго уровня",
+            "Дети линзы"
+          ]
+        }
+      ]
+    },
+    {
+      "series": "Отдельные книги",
+      "books": [
+        {"title": "Пикник на обочине", "author": "Аркадий и Борис Стругацкие", "status": "maybe_read", "hasBook": false},
+        {"title": "Обитаемый остров", "author": "Аркадий и Борис Стругацкие", "status": "maybe_read", "hasBook": false},
+        {"title": "Жук в муравейнике", "author": "Аркадий и Борис Стругацкие", "status": "maybe_read", "hasBook": false},
+        {"title": "Волны гасят ветер", "author": "Аркадий и Борис Стругацкие", "status": "maybe_read", "hasBook": false},
+        {"title": "Обрыв", "author": "Иван Гончаров", "status": "maybe_read", "hasBook": false}
+      ]
+    }
+  ];
+
+  function createBookItem(book) {
+    const li = document.createElement('li');
+    li.className = 'book-item';
+
+    const title = document.createElement('div');
+    title.className = 'book-title';
+    title.textContent = book.title;
+    li.appendChild(title);
+
+    const author = document.createElement('div');
+    author.className = 'book-author';
+    author.textContent = book.author;
+    li.appendChild(author);
+
+    const status = document.createElement('div');
+    status.className = `book-status ${book.status}`;
+    switch (book.status) {
+      case 'read': status.textContent = 'Прочитано'; break;
+      case 'reading': status.textContent = 'Читаю'; break;
+      case 'will_read': status.textContent = 'Буду читать'; break;
+      case 'maybe_read': status.textContent = 'Возможно'; break;
+      default: status.textContent = '';
+    }
+    li.appendChild(status);
+
+    const availability = document.createElement('div');
+    availability.className = 'book-availability ' + (book.hasBook ? 'available' : 'not-available');
+    availability.textContent = book.hasBook ? 'Книга есть' : 'Книги нет';
+    li.appendChild(availability);
+
+    if (book.includes) {
+      const includesList = document.createElement('ul');
+      includesList.className = 'includes-list';
+      for (const inc of book.includes) {
+        const incLi = document.createElement('li');
+        incLi.textContent = inc;
+        includesList.appendChild(incLi);
+      }
+      li.appendChild(includesList);
+    }
+
+    return li;
+  }
+
+  function render() {
+    const main = document.getElementById('content');
+    for (const series of data) {
+      const section = document.createElement('section');
+
+      const h2 = document.createElement('h2');
+      h2.textContent = series.series;
+      section.appendChild(h2);
+
+      const ul = document.createElement('ul');
+      for (const book of series.books) {
+        ul.appendChild(createBookItem(book));
+      }
+      section.appendChild(ul);
+
+      main.appendChild(section);
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
