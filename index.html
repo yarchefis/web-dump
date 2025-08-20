@@ -1,0 +1,39 @@
+<script>
+(async () => {
+  const params = new URLSearchParams(location.search);
+  const imgUrl = params.get('img');
+  if (!imgUrl) {
+    document.body.innerText = 'No image';
+    return;
+  }
+
+  try {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = imgUrl;
+
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let r=0, g=0, b=0, count=0;
+    for(let i=0;i<data.length;i+=4){
+      r+=data[i]; g+=data[i+1]; b+=data[i+2]; count++;
+    }
+    r=Math.round(r/count); g=Math.round(g/count); b=Math.round(b/count);
+    const hex = '#' + ((1<<24) + (r<<16) + (g<<8) + b).toString(16).slice(1);
+
+    document.body.innerText = hex;
+  } catch (e) {
+    document.body.innerText = 'Error loading image';
+  }
+})();
+    </script>
